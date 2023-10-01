@@ -2,7 +2,7 @@ import socket
 import threading
 
 def handle(client_socket):
-    data = client_socket.recv().encode('utf-8')
+    data = client_socket.recv(1024).decode('utf-8')
     print(data)
     datas = data.split(':')
     type = datas[0]
@@ -13,7 +13,7 @@ def handle(client_socket):
             file = open(f'cldb/users/{id}')
             corPass = file.read()
             file.close()
-            if password == corpass:
+            if password == corPass:
                 client_socket.send('true'.encode('utf-8'))
             else:
                 client_socket.send('false2'.encode('utf-8'))
