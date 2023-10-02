@@ -15,11 +15,16 @@ root = tk.Tk()
 root.title('login | zOS')
 root.geometry('1000x800')
 
-def main():
+def logout():
     pass
 
-def loadHome():
-    print('msioflgha')
+def main():
+    print('main')
+    pass
+
+def loadHome(idname):
+    print('began unpack sequence')
+
     loginTitle.pack_forget()
     idLabel.pack_forget()
     idEntry.pack_forget()
@@ -27,9 +32,17 @@ def loadHome():
     passwordEntry.pack_forget()
     loginButton.pack_forget()
     errorText.pack_forget()
-    root.title('home | zOS')
 
-    
+    print('forgot packs')
+    print('began loading and packing sequence')
+
+    homeLabel = tk.Label(root,text='home | zOS | '+idname)
+    logoutBtn = tk.Button(root, text='Log Out',command=logOut)
+
+    homeLabel.pack()
+
+    root.title('home | zOS')
+    print('loading main')
     main()
 
 def login():
@@ -38,9 +51,11 @@ def login():
     client_socket.send(f'l:{idTry}:{passTry}'.encode('utf-8'))
     conf = client_socket.recv(1024).decode('utf-8')
     if conf == 'true':
+        print('correct details')
         idEntry.delete(0, tk.END)
         passwordEntry.delete(0, tk.END)
-        loadHome()
+        print('deleted')
+        loadHome(idTry)
     elif conf == 'false1':
         errorText.config(text='Incorrect Password', foreground="red")
     elif conf == 'false2':
