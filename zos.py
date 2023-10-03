@@ -18,6 +18,12 @@ root.geometry('1000x800')
 def logout():
     pass
 
+class App:
+    def runTexty():
+        texty = tk.Toplevel(root)
+        texty.title('texty')
+        texty.geometry('600x400')
+
 def main():
     print('main')
     pass
@@ -37,9 +43,10 @@ def loadHome(idname):
     print('began loading and packing sequence')
 
     homeLabel = tk.Label(root,text='home | zOS | '+idname)
-    logoutBtn = tk.Button(root, text='Log Out',command=logOut)
+    textyBtn = tk.Button(root, text='texty',command=App.runTexty)
 
     homeLabel.pack()
+    textyBtn.pack()
 
     root.title('home | zOS')
     print('loading main')
