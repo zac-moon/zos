@@ -2,6 +2,7 @@ import socket
 import tkinter as tk
 from tkinter import messagebox
 
+# Initialize the client socket and connection variables
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = 'localhost'
 port = 11704
@@ -10,26 +11,50 @@ try:
     client_socket.connect((host, port))
 except Exception as e:
     messagebox.showerror('Error', f'Server Offline or Unable To Connect: {e}')
+    exit()
 
+# Create the main application window
 root = tk.Tk()
 root.title('login | zOS')
 root.geometry('1000x800')
 
 def logout():
-    pass
+    root.destroy()
 
 class App:
-    def runTexty():
+    # Add 'self' as the first parameter to class methods
+    def runTexty(self, idTry):
+        def textyLoad():
+            pass
+
+        def textySave():
+            curIn = textyTextEntry.get("1.0", "end-1c")
+            fileName = textyFileNameEntry.get()
+            client_socket.send(f'f:save:{idTry}/{fileName}:{curIn}'.encode('utf-8'))
+
         texty = tk.Toplevel(root)
         texty.title('texty')
         texty.geometry('600x400')
 
-def main():
-    print('main')
-    pass
+        textyTextEntry = tk.Text(texty)
+        textyTextEntry.pack(fill=tk.BOTH, expand=True) 
+
+        button_frame = tk.Frame(texty)
+        button_frame.pack(side=tk.TOP)
+
+        textyLoadButton = tk.Button(button_frame, text='Load File', command=textyLoad)
+        textySaveButton = tk.Button(button_frame, text='Save File', command=textySave)
+        textyFileNameEntry = tk.Entry(button_frame)
+
+        textyLoadButton.grid(row=0, column=0)
+        textySaveButton.grid(row=0, column=1)
+        textyFileNameEntry.grid(row=0, column=2)
 
 def loadHome(idname):
-    print('began unpack sequence')
+    # Remove 'idTry' argument from 'App.runTexty'
+    def run_texty():
+        app = App()
+        app.runTexty(idname)
 
     loginTitle.pack_forget()
     idLabel.pack_forget()
@@ -39,18 +64,15 @@ def loadHome(idname):
     loginButton.pack_forget()
     errorText.pack_forget()
 
-    print('forgot packs')
-    print('began loading and packing sequence')
-
-    homeLabel = tk.Label(root,text='home | zOS | '+idname)
-    textyBtn = tk.Button(root, text='texty',command=App.runTexty)
+    homeLabel = tk.Label(root, text='home | zOS | ' + idname)
+    textyBtn = tk.Button(root, text='texty', command=run_texty)  # Pass 'run_texty' as the command
+    logoutBtn = tk.Button(root, text='Log Out', command=logout)
 
     homeLabel.pack()
     textyBtn.pack()
+    logoutBtn.pack()
 
     root.title('home | zOS')
-    print('loading main')
-    main()
 
 def login():
     idTry = idEntry.get()
@@ -61,7 +83,6 @@ def login():
         print('correct details')
         idEntry.delete(0, tk.END)
         passwordEntry.delete(0, tk.END)
-        print('deleted')
         loadHome(idTry)
     elif conf == 'false1':
         errorText.config(text='Incorrect Password', foreground="red")
@@ -87,6 +108,9 @@ loginButton.pack()
 errorText.pack()
 
 root.mainloop()
+
+# Close the socket when the application is closed
+client_socket.close()
 
 
 '''
